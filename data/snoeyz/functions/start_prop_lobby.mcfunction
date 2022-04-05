@@ -1,0 +1,2 @@
+execute unless entity @p[team=!props,team=!seekers] run function snoeyz:setup_prop_lobby
+execute if entity @p[team=!props,team=!seekers] run tellraw @p [{"text":"Not everyone has joined a team yet!","color":"gold"}]
