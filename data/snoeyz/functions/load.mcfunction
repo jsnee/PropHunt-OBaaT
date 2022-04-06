@@ -31,6 +31,18 @@ scoreboard objectives remove prophunt_new_game
 scoreboard objectives add prophunt_new_game trigger "Prop Hunt: Trigger New Game"
 scoreboard players enable @a prophunt_new_game
 
+scoreboard objectives add snoeyz.prop.amethyst_cluster trigger "Prop Hunt Prop: Choose Amethyst Cluster"
+scoreboard objectives add snoeyz.prop.anvil trigger "Prop Hunt Prop: Choose Anvil"
+scoreboard objectives add snoeyz.prop.barrel trigger "Prop Hunt Prop: Choose Barrel"
+scoreboard objectives add snoeyz.prop.campfire trigger "Prop Hunt Prop: Choose Campfire"
+scoreboard objectives add snoeyz.prop.candle trigger "Prop Hunt Prop: Choose Candle"
+scoreboard objectives add snoeyz.prop.composter trigger "Prop Hunt Prop: Choose Composter"
+scoreboard objectives add snoeyz.prop.crafting_table trigger "Prop Hunt Prop: Choose Crafting Table"
+scoreboard objectives add snoeyz.prop.flowering_azaleas trigger "Prop Hunt Prop: Choose Flowering Azaleas"
+scoreboard objectives add snoeyz.prop.iron_trapdoor trigger "Prop Hunt Prop: Choose Iron Trapdoor"
+scoreboard objectives add snoeyz.prop.lantern trigger "Prop Hunt Prop: Choose Lantern"
+scoreboard objectives add snoeyz.prop.torch trigger "Prop Hunt Prop: Choose Torch"
+
 scoreboard objectives add snoeyz.options.prop_selection_time dummy "Prop Hunt Options: Prop Selection Time"
 scoreboard players set .lock snoeyz.options.prop_selection_time 600
 scoreboard objectives add snoeyz.options.hiding_time dummy "Prop Hunt Options: Hiding Time"
