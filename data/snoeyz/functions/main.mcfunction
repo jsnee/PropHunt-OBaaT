@@ -1,9 +1,16 @@
 execute if score .lock snoeyz.gamestate matches 1 run function snoeyz:tick_team_lobby
-execute as @a[team=props,predicate=!snoeyz:remaining_prop] if score .lock snoeyz.gamestate matches 2 run function snoeyz:player_found
+execute if score .lock snoeyz.gamestate matches 2 run function snoeyz:tick_prop_selection_lobby
+execute unless score .lock snoeyz.gamestate matches 2 run kill @e[type=armor_stand,tag=propselection-stands]
+execute unless score .lock snoeyz.gamestate matches 1 run kill @e[type=armor_stand,tag=begingame-stand]
 execute store result score .lock snoeyz.props_remaining run team list props
-execute if score .lock snoeyz.gamestate matches 2 if score .lock snoeyz.props_remaining matches 0 run function snoeyz:end_game
-execute if score .lock snoeyz.gamestate matches 2 run gamemode spectator @a[team=!props,team=!seekers]
+execute if score .lock snoeyz.gamestate matches 4 as @a[team=props,predicate=!snoeyz:remaining_prop] run function snoeyz:player_found
+execute if score .lock snoeyz.gamestate matches 4 if score .lock snoeyz.props_remaining matches 0 run function snoeyz:end_game
+execute if score .lock snoeyz.gamestate matches 4 run gamemode spectator @a[team=!props,team=!seekers]
 kill @e[type=falling_block,tag=hiding-props]
+
+execute if score .lock snoeyz.gamestate matches 4 if score .lock snoeyz.prop_tell_timer matches 0 at @r[team=props] run particle minecraft:ambient_entity_effect ~ ~ ~
+execute if score .lock snoeyz.gamestate matches 4 if score .lock snoeyz.prop_tell_timer matches 0.. run scoreboard players remove .lock snoeyz.prop_tell_timer 1
+execute if score .lock snoeyz.gamestate matches 4 if score .lock snoeyz.prop_tell_timer matches -1 run scoreboard players operation .lock snoeyz.prop_tell_timer = .lock snoeyz.options.prop_tell_frequency
 
 execute as @a[scores={snoeyz.prop.amethyst_cluster=1..}] run function snoeyz:trigger_prop_amethyst_cluster
 execute as @a[scores={snoeyz.prop.anvil=1..}] run function snoeyz:trigger_prop_anvil
@@ -32,46 +39,54 @@ execute as @a[predicate=snoeyz:hiding-torch] at @s run summon minecraft:falling_
 tag @a[predicate=snoeyz:hiding,tag=!hiding_player] add hiding-player
 tag @a[predicate=!snoeyz:hiding,tag=hiding_player] remove hiding-player
 
+execute if score .lock snoeyz.team_lobby_countdown matches 0.. run scoreboard players remove .lock snoeyz.team_lobby_countdown 1
+execute if score .lock snoeyz.team_lobby_countdown matches 0.. run scoreboard players operation .lock snoeyz.display_time_seconds = .lock snoeyz.team_lobby_countdown
+execute if score .lock snoeyz.team_lobby_countdown matches 99 run tellraw @a ["",{"text":"Game Begins In: ","color":"gold"},{"text":"5","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
+execute if score .lock snoeyz.team_lobby_countdown matches 80 run tellraw @a ["",{"text":"Game Begins In: ","color":"gold"},{"text":"4","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
+execute if score .lock snoeyz.team_lobby_countdown matches 60 run tellraw @a ["",{"text":"Game Begins In: ","color":"gold"},{"text":"3","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
+execute if score .lock snoeyz.team_lobby_countdown matches 40 run tellraw @a ["",{"text":"Game Begins In: ","color":"gold"},{"text":"2","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
+execute if score .lock snoeyz.team_lobby_countdown matches 20 run tellraw @a ["",{"text":"Game Begins In: ","color":"gold"},{"text":"1","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
+
 execute if score .lock snoeyz.prop_selection_time matches 0 run function snoeyz:start_hiding
 execute if score .lock snoeyz.prop_selection_time matches 0.. run scoreboard players remove .lock snoeyz.prop_selection_time 1
 execute if score .lock snoeyz.prop_selection_time matches 0.. run scoreboard players operation .lock snoeyz.display_time_seconds = .lock snoeyz.prop_selection_time
-execute if score .lock snoeyz.prop_selection_time matches 200 run title @a[team=props] title ["",{"text":"Game Begins In: ","color":"dark_aqua"},{"text":"10","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
-execute if score .lock snoeyz.prop_selection_time matches 180 run title @a[team=props] title ["",{"text":"Game Begins In: ","color":"dark_aqua"},{"text":"9","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
-execute if score .lock snoeyz.prop_selection_time matches 160 run title @a[team=props] title ["",{"text":"Game Begins In: ","color":"dark_aqua"},{"text":"8","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
-execute if score .lock snoeyz.prop_selection_time matches 140 run title @a[team=props] title ["",{"text":"Game Begins In: ","color":"dark_aqua"},{"text":"7","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
-execute if score .lock snoeyz.prop_selection_time matches 120 run title @a[team=props] title ["",{"text":"Game Begins In: ","color":"dark_aqua"},{"text":"6","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
-execute if score .lock snoeyz.prop_selection_time matches 100 run title @a title ["",{"text":"Game Begins In: ","color":"dark_aqua"},{"text":"5","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
-execute if score .lock snoeyz.prop_selection_time matches 80 run title @a title ["",{"text":"Game Begins In: ","color":"dark_aqua"},{"text":"4","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
-execute if score .lock snoeyz.prop_selection_time matches 60 run title @a title ["",{"text":"Game Begins In: ","color":"dark_aqua"},{"text":"3","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
-execute if score .lock snoeyz.prop_selection_time matches 40 run title @a title ["",{"text":"Game Begins In: ","color":"dark_aqua"},{"text":"2","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
-execute if score .lock snoeyz.prop_selection_time matches 20 run title @a title ["",{"text":"Game Begins In: ","color":"dark_aqua"},{"text":"1","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
+execute if score .lock snoeyz.prop_selection_time matches 200 run title @a[team=props] title ["",{"text":"Props Hide In: ","color":"gold"},{"text":"10","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
+execute if score .lock snoeyz.prop_selection_time matches 180 run title @a[team=props] title ["",{"text":"Props Hide In: ","color":"gold"},{"text":"9","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
+execute if score .lock snoeyz.prop_selection_time matches 160 run title @a[team=props] title ["",{"text":"Props Hide In: ","color":"gold"},{"text":"8","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
+execute if score .lock snoeyz.prop_selection_time matches 140 run title @a[team=props] title ["",{"text":"Props Hide In: ","color":"gold"},{"text":"7","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
+execute if score .lock snoeyz.prop_selection_time matches 120 run title @a[team=props] title ["",{"text":"Props Hide In: ","color":"gold"},{"text":"6","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
+execute if score .lock snoeyz.prop_selection_time matches 100 run title @a title ["",{"text":"Props Hide In: ","color":"gold"},{"text":"5","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
+execute if score .lock snoeyz.prop_selection_time matches 80 run title @a title ["",{"text":"Props Hide In: ","color":"gold"},{"text":"4","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
+execute if score .lock snoeyz.prop_selection_time matches 60 run title @a title ["",{"text":"Props Hide In: ","color":"gold"},{"text":"3","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
+execute if score .lock snoeyz.prop_selection_time matches 40 run title @a title ["",{"text":"Props Hide In: ","color":"gold"},{"text":"2","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
+execute if score .lock snoeyz.prop_selection_time matches 20 run title @a title ["",{"text":"Props Hide In: ","color":"gold"},{"text":"1","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
 
 execute if score .lock snoeyz.hiding_time matches 0 run function snoeyz:start_seeking
 execute if score .lock snoeyz.hiding_time matches 0.. run scoreboard players remove .lock snoeyz.hiding_time 1
 execute if score .lock snoeyz.hiding_time matches 0.. run scoreboard players operation .lock snoeyz.display_time_seconds = .lock snoeyz.hiding_time
-execute if score .lock snoeyz.hiding_time matches 200 run title @a title ["",{"text":"Seekers Start In: ","color":"dark_aqua"},{"text":"10","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
-execute if score .lock snoeyz.hiding_time matches 180 run title @a title ["",{"text":"Seekers Start In: ","color":"dark_aqua"},{"text":"9","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
-execute if score .lock snoeyz.hiding_time matches 160 run title @a title ["",{"text":"Seekers Start In: ","color":"dark_aqua"},{"text":"8","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
-execute if score .lock snoeyz.hiding_time matches 140 run title @a title ["",{"text":"Seekers Start In: ","color":"dark_aqua"},{"text":"7","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
-execute if score .lock snoeyz.hiding_time matches 120 run title @a title ["",{"text":"Seekers Start In: ","color":"dark_aqua"},{"text":"6","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
-execute if score .lock snoeyz.hiding_time matches 100 run title @a title ["",{"text":"Seekers Start In: ","color":"dark_aqua"},{"text":"5","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
-execute if score .lock snoeyz.hiding_time matches 80 run title @a title ["",{"text":"Seekers Start In: ","color":"dark_aqua"},{"text":"4","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
-execute if score .lock snoeyz.hiding_time matches 60 run title @a title ["",{"text":"Seekers Start In: ","color":"dark_aqua"},{"text":"3","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
-execute if score .lock snoeyz.hiding_time matches 40 run title @a title ["",{"text":"Seekers Start In: ","color":"dark_aqua"},{"text":"2","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
-execute if score .lock snoeyz.hiding_time matches 20 run title @a title ["",{"text":"Seekers Start In: ","color":"dark_aqua"},{"text":"1","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
+execute if score .lock snoeyz.hiding_time matches 200 run title @a title ["",{"text":"Seekers Start In: ","color":"gold"},{"text":"10","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
+execute if score .lock snoeyz.hiding_time matches 180 run title @a title ["",{"text":"Seekers Start In: ","color":"gold"},{"text":"9","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
+execute if score .lock snoeyz.hiding_time matches 160 run title @a title ["",{"text":"Seekers Start In: ","color":"gold"},{"text":"8","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
+execute if score .lock snoeyz.hiding_time matches 140 run title @a title ["",{"text":"Seekers Start In: ","color":"gold"},{"text":"7","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
+execute if score .lock snoeyz.hiding_time matches 120 run title @a title ["",{"text":"Seekers Start In: ","color":"gold"},{"text":"6","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
+execute if score .lock snoeyz.hiding_time matches 100 run title @a title ["",{"text":"Seekers Start In: ","color":"gold"},{"text":"5","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
+execute if score .lock snoeyz.hiding_time matches 80 run title @a title ["",{"text":"Seekers Start In: ","color":"gold"},{"text":"4","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
+execute if score .lock snoeyz.hiding_time matches 60 run title @a title ["",{"text":"Seekers Start In: ","color":"gold"},{"text":"3","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
+execute if score .lock snoeyz.hiding_time matches 40 run title @a title ["",{"text":"Seekers Start In: ","color":"gold"},{"text":"2","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
+execute if score .lock snoeyz.hiding_time matches 20 run title @a title ["",{"text":"Seekers Start In: ","color":"gold"},{"text":"1","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
 
 execute if score .lock snoeyz.play_time matches 0.. run scoreboard players remove .lock snoeyz.play_time 1
 execute if score .lock snoeyz.play_time matches 0.. run scoreboard players operation .lock snoeyz.display_time_seconds = .lock snoeyz.play_time
-execute if score .lock snoeyz.play_time matches 200 run title @a title ["",{"text":"Time's Up In: ","color":"dark_aqua"},{"text":"10","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
-execute if score .lock snoeyz.play_time matches 180 run title @a title ["",{"text":"Time's Up In: ","color":"dark_aqua"},{"text":"9","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
-execute if score .lock snoeyz.play_time matches 160 run title @a title ["",{"text":"Time's Up In: ","color":"dark_aqua"},{"text":"8","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
-execute if score .lock snoeyz.play_time matches 140 run title @a title ["",{"text":"Time's Up In: ","color":"dark_aqua"},{"text":"7","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
-execute if score .lock snoeyz.play_time matches 120 run title @a title ["",{"text":"Time's Up In: ","color":"dark_aqua"},{"text":"6","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
-execute if score .lock snoeyz.play_time matches 100 run title @a title ["",{"text":"Time's Up In: ","color":"dark_aqua"},{"text":"5","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
-execute if score .lock snoeyz.play_time matches 80 run title @a title ["",{"text":"Time's Up In: ","color":"dark_aqua"},{"text":"4","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
-execute if score .lock snoeyz.play_time matches 60 run title @a title ["",{"text":"Time's Up In: ","color":"dark_aqua"},{"text":"3","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
-execute if score .lock snoeyz.play_time matches 40 run title @a title ["",{"text":"Time's Up In: ","color":"dark_aqua"},{"text":"2","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
-execute if score .lock snoeyz.play_time matches 20 run title @a title ["",{"text":"Time's Up In: ","color":"dark_aqua"},{"text":"1","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
+execute if score .lock snoeyz.play_time matches 200 run title @a title ["",{"text":"Time's Up In: ","color":"gold"},{"text":"10","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
+execute if score .lock snoeyz.play_time matches 180 run title @a title ["",{"text":"Time's Up In: ","color":"gold"},{"text":"9","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
+execute if score .lock snoeyz.play_time matches 160 run title @a title ["",{"text":"Time's Up In: ","color":"gold"},{"text":"8","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
+execute if score .lock snoeyz.play_time matches 140 run title @a title ["",{"text":"Time's Up In: ","color":"gold"},{"text":"7","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
+execute if score .lock snoeyz.play_time matches 120 run title @a title ["",{"text":"Time's Up In: ","color":"gold"},{"text":"6","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
+execute if score .lock snoeyz.play_time matches 100 run title @a title ["",{"text":"Time's Up In: ","color":"gold"},{"text":"5","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
+execute if score .lock snoeyz.play_time matches 80 run title @a title ["",{"text":"Time's Up In: ","color":"gold"},{"text":"4","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
+execute if score .lock snoeyz.play_time matches 60 run title @a title ["",{"text":"Time's Up In: ","color":"gold"},{"text":"3","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
+execute if score .lock snoeyz.play_time matches 40 run title @a title ["",{"text":"Time's Up In: ","color":"gold"},{"text":"2","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
+execute if score .lock snoeyz.play_time matches 20 run title @a title ["",{"text":"Time's Up In: ","color":"gold"},{"text":"1","color":"red"},{"text":" Seconds","color":"dark_aqua"}]
 
 execute if score .lock snoeyz.display_time_seconds matches 1.. run function snoeyz:display_time_remaining
 

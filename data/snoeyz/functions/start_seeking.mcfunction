@@ -17,5 +17,5 @@ scoreboard players reset @a snoeyz.prop.iron_trapdoor
 scoreboard players reset @a snoeyz.prop.lantern
 scoreboard players reset @a snoeyz.prop.torch
 
-scoreboard players set .lock snoeyz.gamestate 2
+scoreboard players set .lock snoeyz.gamestate 4
 scoreboard players operation .lock snoeyz.play_time = .lock snoeyz.options.play_time

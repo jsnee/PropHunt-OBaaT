@@ -3,6 +3,8 @@ setblock 0 0 0 minecraft:shulker_box{Items:[{Slot:0b,id:"minecraft:barrel",Count
 
 scoreboard objectives add snoeyz.gamestate dummy "Prop Hunt: Game State"
 scoreboard players set .lock snoeyz.gamestate 0
+scoreboard objectives add snoeyz.team_lobby_countdown dummy "Prop Hunt: Lobby Countdown"
+scoreboard players set .lock snoeyz.team_lobby_countdown -1
 scoreboard objectives add snoeyz.prop_selection_time dummy "Prop Hunt: Prop Selection Time"
 scoreboard players set .lock snoeyz.prop_selection_time -1
 scoreboard objectives add snoeyz.display_time_minutes dummy "Prop Hunt: Display Time Minutes"
@@ -15,6 +17,8 @@ scoreboard objectives add snoeyz.play_time dummy "Prop Hunt: Play Time"
 scoreboard players set .lock snoeyz.play_time -1
 scoreboard objectives add snoeyz.props_remaining dummy "Prop Hunt: Props Remaining"
 scoreboard players set .lock snoeyz.props_remaining 0
+scoreboard objectives add snoeyz.prop_tell_timer dummy "Prop Hunt: Prop Tell Timer"
+scoreboard players set .lock snoeyz.prop_tell_timer 0
 scoreboard objectives add seeker_shot_cooldown dummy "Prop Hunt: Seeker Shot Cooldown"
 setworldspawn 0 201 0
 function snoeyz:create_teams
@@ -51,6 +55,14 @@ scoreboard objectives add snoeyz.options.play_time dummy "Prop Hunt Options: Pla
 scoreboard players set .lock snoeyz.options.play_time 24000
 scoreboard objectives add snoeyz.options.infect_mode dummy "Prop Hunt Options: Infect mode"
 scoreboard players set .lock snoeyz.options.infect_mode 1
+scoreboard objectives add snoeyz.options.shot_cooldown dummy "Prop Hunt Options: Seeker Shot Cooldown"
+scoreboard players set .lock snoeyz.options.shot_cooldown 100
+scoreboard objectives add snoeyz.options.prop_tell_frequency dummy "Prop Hunt Options: Prop Tell Frequency"
+scoreboard players set .lock snoeyz.options.prop_tell_frequency 100
 
 team empty props
 team empty seekers
+function snoeyz:clear_map
+execute as @a run function snoeyz:clear_chosen_prop_tags
+execute as @a run function snoeyz:clear_hands_and_head
+kill @e[type=armor_stand]

@@ -15,5 +15,7 @@ scoreboard players reset @a snoeyz.prop.iron_trapdoor
 scoreboard players reset @a snoeyz.prop.lantern
 scoreboard players reset @a snoeyz.prop.torch
 
+scoreboard players set .lock snoeyz.gamestate 3
+
 execute if score .lock snoeyz.prop_selection_time matches 0 run title @a[team=props] title ["",{"text":"GO HIDE!!!","color":"dark_aqua"}]
 execute if score .lock snoeyz.prop_selection_time matches 0 run title @a[team=seekers] title ["",{"text":"Wait While The Props Hide...","color":"dark_aqua"}]

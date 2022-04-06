@@ -3,6 +3,7 @@ execute if score .lock snoeyz.props_remaining matches 0 run title @a title ["",{
 
 scoreboard players set .lock snoeyz.gamestate 0
 
+scoreboard players set .lock snoeyz.team_lobby_countdown -1
 scoreboard players set .lock snoeyz.prop_selection_time -1
 scoreboard players set .lock snoeyz.hiding_time -1
 scoreboard players set .lock snoeyz.play_time -1

@@ -8,8 +8,10 @@ fill -20 200 20 20 200 5 minecraft:cyan_concrete
 
 tp @a 0 201 0
 
-setblock 19 202 0 spruce_sign[rotation=4]
-data merge block 19 202 0 {Text2:"{\"text\":\"Begin Game\",\"color\":\"green\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/function snoeyz:start_prop_lobby\"}}",GlowingText:1b}
+setblock 5 201 0 minecraft:blue_ice
+setblock 5 202 0 minecraft:lever[face=floor,facing=north,powered=false]
+summon minecraft:armor_stand 5 202.25 0 {Invisible:true,NoGravity:true,Marker:true,CustomName:'{"text":"Begin Game"}',CustomNameVisible:true,Tags:["begingame-stand"]}
+
 setblock -19 202 0 spruce_sign[rotation=12]
 data merge block -19 202 0 {Text2:"{\"text\":\"Options\",\"color\":\"dark_aqua\",\"bold\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/function snoeyz:run_options\"}}",GlowingText:1b}
 
