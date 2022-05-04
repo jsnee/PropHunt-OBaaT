@@ -1,6 +1,8 @@
 scoreboard players reset @a prophunt_new_game
 execute as @a[scores={prophunt_new_game=1..}] run scoreboard players set @s prophunt_new_game 0
 
+execute as @a run function snoeyz:clear_chosen_prop_tags
+
 fill -20 200 -20 20 210 20 minecraft:barrier hollow
 
 fill -20 200 -20 20 200 -5 minecraft:red_concrete

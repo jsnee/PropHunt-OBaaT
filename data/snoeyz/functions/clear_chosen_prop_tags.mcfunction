@@ -9,3 +9,7 @@ tag @s remove prop-flowering_azaleas
 tag @s remove prop-iron_trapdoor
 tag @s remove prop-lantern
 tag @s remove prop-torch
+tag @s remove prop-bookshelf
+tag @s remove prop-sugar_cane
+
+tag @s remove prop-random

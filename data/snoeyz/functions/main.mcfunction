@@ -1,3 +1,11 @@
+tellraw @a[scores={prophunt_reset_game=1}] ["",{"text":"Are you sure you want to reset the game?","bold":true,"color":"red"}," if so, type: ",{"text":"/trigger prophunt_reset_game set 2","color":"aqua","clickEvent":{"action":"suggest_command","value":"/trigger prophunt_reset_game set 2"},"hoverEvent":{"action":"show_text","contents":[{"text":"Click to run","color":"gold"}]}}]
+execute if entity @p[scores={prophunt_reset_game=2..}] run tellraw @a {"text":"Game Reset!","color":"gold"}
+execute if entity @p[scores={prophunt_reset_game=2..}] run function snoeyz:reset_game
+scoreboard players reset @a prophunt_reset_game
+execute if score .lock snoeyz.gamestate matches 1.. run scoreboard players enable @a prophunt_reset_game
+
+tag @a[tag=in_team_lobby] remove in_team_lobby
+
 execute if score .lock snoeyz.gamestate matches 1 run function snoeyz:tick_team_lobby
 execute if score .lock snoeyz.gamestate matches 2 run function snoeyz:tick_prop_selection_lobby
 execute unless score .lock snoeyz.gamestate matches 2 run kill @e[type=armor_stand,tag=propselection-stands]
@@ -8,21 +16,25 @@ execute if score .lock snoeyz.gamestate matches 4 if score .lock snoeyz.props_re
 execute if score .lock snoeyz.gamestate matches 4 run gamemode spectator @a[team=!props,team=!seekers]
 kill @e[type=falling_block,tag=hiding-props]
 
-execute if score .lock snoeyz.gamestate matches 4 if score .lock snoeyz.prop_tell_timer matches 0 at @r[team=props] run particle minecraft:ambient_entity_effect ~ ~ ~
+execute if score .lock snoeyz.gamestate matches 4 if score .lock snoeyz.prop_tell_timer matches 0 at @r[team=props] run particle minecraft:ambient_entity_effect ~ ~0.5 ~
 execute if score .lock snoeyz.gamestate matches 4 if score .lock snoeyz.prop_tell_timer matches 0.. run scoreboard players remove .lock snoeyz.prop_tell_timer 1
 execute if score .lock snoeyz.gamestate matches 4 if score .lock snoeyz.prop_tell_timer matches -1 run scoreboard players operation .lock snoeyz.prop_tell_timer = .lock snoeyz.options.prop_tell_frequency
 
-execute as @a[scores={snoeyz.prop.amethyst_cluster=1..}] run function snoeyz:trigger_prop_amethyst_cluster
-execute as @a[scores={snoeyz.prop.anvil=1..}] run function snoeyz:trigger_prop_anvil
-execute as @a[scores={snoeyz.prop.barrel=1..}] run function snoeyz:trigger_prop_barrel
-execute as @a[scores={snoeyz.prop.campfire=1..}] run function snoeyz:trigger_prop_campfire
-execute as @a[scores={snoeyz.prop.candle=1..}] run function snoeyz:trigger_prop_candle
-execute as @a[scores={snoeyz.prop.composter=1..}] run function snoeyz:trigger_prop_composter
-execute as @a[scores={snoeyz.prop.crafting_table=1..}] run function snoeyz:trigger_prop_crafting_table
-execute as @a[scores={snoeyz.prop.flowering_azaleas=1..}] run function snoeyz:trigger_prop_flowering_azalea
-execute as @a[scores={snoeyz.prop.iron_trapdoor=1..}] run function snoeyz:trigger_prop_iron_trapdoor
-execute as @a[scores={snoeyz.prop.lantern=1..}] run function snoeyz:trigger_prop_lantern
-execute as @a[scores={snoeyz.prop.torch=1..}] run function snoeyz:trigger_prop_torch
+execute if score .lock snoeyz.gamestate matches 2.. as @a[gamemode=!creative,gamemode=!spectator,team=!seekers,team=!props] run gamemode spectator @s
+
+execute as @a[scores={snoeyz.prop.amethyst_cluster=1..}] run function snoeyz:trigger_prop/amethyst_cluster
+execute as @a[scores={snoeyz.prop.anvil=1..}] run function snoeyz:trigger_prop/anvil
+execute as @a[scores={snoeyz.prop.barrel=1..}] run function snoeyz:trigger_prop/barrel
+execute as @a[scores={snoeyz.prop.campfire=1..}] run function snoeyz:trigger_prop/campfire
+execute as @a[scores={snoeyz.prop.candle=1..}] run function snoeyz:trigger_prop/candle
+execute as @a[scores={snoeyz.prop.composter=1..}] run function snoeyz:trigger_prop/composter
+execute as @a[scores={snoeyz.prop.crafting_table=1..}] run function snoeyz:trigger_prop/crafting_table
+execute as @a[scores={snoeyz.prop.flowering_azaleas=1..}] run function snoeyz:trigger_prop/flowering_azalea
+execute as @a[scores={snoeyz.prop.iron_trapdoor=1..}] run function snoeyz:trigger_prop/iron_trapdoor
+execute as @a[scores={snoeyz.prop.lantern=1..}] run function snoeyz:trigger_prop/lantern
+execute as @a[scores={snoeyz.prop.torch=1..}] run function snoeyz:trigger_prop/torch
+execute as @a[scores={snoeyz.prop.bookshelf=1..}] run function snoeyz:trigger_prop/bookshelf
+execute as @a[scores={snoeyz.prop.sugar_cane=1..}] run function snoeyz:trigger_prop/sugar_cane
 
 execute as @a[predicate=snoeyz:hiding-amethyst_cluster] at @s run summon minecraft:falling_block ~ ~ ~ {BlockState:{Name:"minecraft:amethyst_cluster"},Time:1,NoGravity:1b,Tags:["hiding-props"]}
 execute as @a[predicate=snoeyz:hiding-anvil] at @s run summon minecraft:falling_block ~ ~ ~ {BlockState:{Name:"minecraft:anvil"},Time:1,NoGravity:1b,Tags:["hiding-props"]}
@@ -35,6 +47,8 @@ execute as @a[predicate=snoeyz:hiding-flowering_azalea] at @s run summon minecra
 execute as @a[predicate=snoeyz:hiding-iron_trapdoor] at @s run summon minecraft:falling_block ~ ~ ~ {BlockState:{Name:"minecraft:iron_trapdoor"},Time:1,NoGravity:1b,Tags:["hiding-props"]}
 execute as @a[predicate=snoeyz:hiding-lantern] at @s run summon minecraft:falling_block ~ ~ ~ {BlockState:{Name:"minecraft:lantern"},Time:1,NoGravity:1b,Tags:["hiding-props"]}
 execute as @a[predicate=snoeyz:hiding-torch] at @s run summon minecraft:falling_block ~ ~ ~ {BlockState:{Name:"minecraft:torch"},Time:1,NoGravity:1b,Tags:["hiding-props"]}
+execute as @a[predicate=snoeyz:hiding-bookshelf] at @s run summon minecraft:falling_block ~ ~ ~ {BlockState:{Name:"minecraft:bookshelf"},Time:1,NoGravity:1b,Tags:["hiding-props"]}
+execute as @a[predicate=snoeyz:hiding-sugar_cane] at @s run summon minecraft:falling_block ~ ~ ~ {BlockState:{Name:"minecraft:sugar_cane"},Time:1,NoGravity:1b,Tags:["hiding-props"]}
 
 tag @a[predicate=snoeyz:hiding,tag=!hiding_player] add hiding-player
 tag @a[predicate=!snoeyz:hiding,tag=hiding_player] remove hiding-player
@@ -99,3 +113,11 @@ execute if score .lock snoeyz.hiding_time matches 0.. as @a[team=!seekers,predic
 execute if score .lock snoeyz.hiding_time matches 0.. as @a[team=seekers,predicate=!snoeyz:holding-snowball] unless entity @s[predicate=snoeyz:hand_empty] run item replace entity @s weapon with minecraft:air
 execute if score .lock snoeyz.gamestate matches 1.. as @a[team=!seekers,predicate=!snoeyz:hand_empty] run item replace entity @s weapon with minecraft:air
 execute if score .lock snoeyz.gamestate matches 1.. as @a[team=seekers,predicate=!snoeyz:holding-snowball] unless entity @s[predicate=snoeyz:hand_empty] run item replace entity @s weapon with minecraft:air
+
+execute unless score .lock snoeyz.gamestate matches 1 if score .lock snoeyz.team_lobby_countdown matches 0.. run scoreboard players set .lock snoeyz.team_lobby_countdown -1
+execute unless score .lock snoeyz.gamestate matches 2 if score .lock snoeyz.prop_selection_time matches 0.. run scoreboard players set .lock snoeyz.prop_selection_time -1
+execute unless score .lock snoeyz.gamestate matches 3 if score .lock snoeyz.hiding_time matches 0.. run scoreboard players set .lock snoeyz.hiding_time -1
+execute unless score .lock snoeyz.gamestate matches 4 if score .lock snoeyz.play_time matches 0.. run scoreboard players set .lock snoeyz.play_time -1
+
+scoreboard players reset @a prophunt_new_game
+execute if score .lock snoeyz.gamestate matches 0 run scoreboard players enable @a prophunt_new_game
